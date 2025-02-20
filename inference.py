@@ -22,7 +22,9 @@ args = SLConfig.fromfile('config/DINO/DINO_4scale.py')
 args.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model, _, _  = build_model_main(args)
 
-url = "https://drive.google.com/file/d/1eeAHgu-fzp28PGdIjeLe-pzGPMG2r2G_/view?usp=drive_link"
+file_id = "1eeAHgu-fzp28PGdIjeLe-pzGPMG2r2G_"
+url = f"https://drive.google.com/uc?id={file_id}"
+
 weigths = "dino_4scale.pth"
 gdown.download(url, weigths, quiet=False)
 
