@@ -258,13 +258,11 @@ class DINO(nn.Module):
                 masks.append(mask)
                 poss.append(pos_l)
 
-        if self.dn_number > 0 or targets is not None:
-            input_query_label, input_query_bbox, attn_mask, dn_meta =\
-                prepare_for_cdn(dn_args=(targets, self.dn_number, self.dn_label_noise_ratio, self.dn_box_noise_scale),
-                                training=self.training,num_queries=self.num_queries,num_classes=self.num_classes,
-                                hidden_dim=self.hidden_dim,label_enc=self.label_enc)
+        if self.training and (self.dn_number > 0 and targets is not None):
+            input_query_label, input_query_bbox, attn_mask, dn_meta = prepare_for_cdn(dn_args=(targets, self.dn_number, self.dn_label_noise_ratio, self.dn_box_noise_scale),
+                                training=self.training, num_queries=self.num_queries, num_classes=self.num_classes,
+                                hidden_dim=self.hidden_dim, label_enc=self.label_enc)
         else:
-            assert targets is None
             input_query_bbox = input_query_label = attn_mask = dn_meta = None
 
         hs, reference, hs_enc, ref_enc, init_box_proposal = self.transformer(srcs, masks, input_query_bbox, poss,input_query_label,attn_mask)
