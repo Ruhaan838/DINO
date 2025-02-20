@@ -27,6 +27,6 @@ model, _, _  = build_model_main(args)
 # gdown.download(url, weigths, quiet=False)
 
 
-output = model(image)
+output = model(image, target=None)
 print("Output:",output)
 
