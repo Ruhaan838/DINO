@@ -5,6 +5,7 @@ import torch
 from PIL import Image
 from torchvision import transforms as T
 import gdown
+import os
 
 #load the sample data
 image_path = "./figs/idea.jpg"
@@ -15,7 +16,7 @@ transforms = T.Compose([
     T.ToTensor(),
 ])
 
-image = transforms(image).unsqueeze(0).to('cuda')
+image = transforms(image).unsqueeze(0)
 
 #model preparation
 args = SLConfig.fromfile('config/DINO/DINO_4scale.py')
@@ -26,9 +27,9 @@ file_id = "1eeAHgu-fzp28PGdIjeLe-pzGPMG2r2G_"
 url = f"https://drive.google.com/uc?id={file_id}"
 
 weigths = "dino_4scale.pth"
-gdown.download(url, weigths, quiet=False)
+if not os.path.exists(weigths):
+    gdown.download(url, weigths, quiet=False)
 
-model.load_state_dict(torch.load(weigths)['model'])
-model = model.to('cuda')
+model.load_state_dict(torch.load(weigths, map_location='cpu',weights_only=False)['model'])
 output = model.forward(image, None)
 print("Output:",output)
